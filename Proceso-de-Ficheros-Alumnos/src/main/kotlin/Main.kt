@@ -40,5 +40,17 @@ fun main() {
     val alumnoMasPeque = alumnos.minBy { it.edad }
     println(alumnoMasPeque)
 
+    var sum = 0
+    alumnos.forEach{sum += it.edad}
+    println("Media de edad de los alumnos: " + sum/alumnos.size)
+
+    sum = 0
+    alumnos.forEach{sum += it.nombre.length}
+    println("Media de longitud de nombre de los alumnos: " + sum/alumnos.size)
+
+    println("Listado de alumnos agrupados por edad:")
+    println(alumnos.groupBy{it.edad})
+
+    println("Listado de alumnos agrupados por edad:")
 
 }
