@@ -6,23 +6,24 @@ import java.io.File
 
 fun main() {
     // Lectura básica de fichero
-    val ficheroAlumnos = File("alumnos.csv")
+    val ficheroAlumnos = File("data", "alumnos.csv")
 
     if (ficheroAlumnos.exists() && ficheroAlumnos.canRead()) println("El fichero existe y es accesible")
     else throw IllegalArgumentException("El fichero no existe o no es accesible")
 
-    val alumnos = ficheroAlumnos.readLines().drop(1) // Se salta la cabecera porque la primera fila no contiene informacion
-        .map{line -> line.split(",") } // Se indica el separador, en este caso la coma
-        .map{ alumno ->
-            println(alumno)
-            AlumnoDTO(
-                id = alumno[0].trim().toInt(),
-                nombre = alumno[1],
-                createdAt = alumno[2],
-                tipo = alumno[3],
-                edad = alumno[5].toInt()
-            ).toModel() // Se convierte a modelo
-        }
+    val alumnos =
+        ficheroAlumnos.readLines().drop(1) // Se salta la cabecera porque la primera fila no contiene informacion
+            .map { line -> line.split(",") } // Se indica el separador, en este caso la coma
+            .map { alumno ->
+                println(alumno)
+                AlumnoDTO(
+                    id = alumno[0].trim().toInt(),
+                    nombre = alumno[1],
+                    createdAt = alumno[2],
+                    tipo = alumno[3],
+                    edad = alumno[5].toInt()
+                ).toModel() // Se convierte a modelo
+            }
     /*
     Alumno más mayor
     Alumno más joven
@@ -33,24 +34,31 @@ fun main() {
     Agrupados por edad, obtener la longitud de nombre.
     Agrupados por edad, obtener el nombre mas largo.
     */
-
+    println("-Alumno mas mayor-")
     val alumnoMasMayor = alumnos.maxBy { it.edad }
     println(alumnoMasMayor)
 
+    println("-Alumno mas peque-")
     val alumnoMasPeque = alumnos.minBy { it.edad }
     println(alumnoMasPeque)
 
     var sum = 0
-    alumnos.forEach{sum += it.edad}
-    println("Media de edad de los alumnos: " + sum/alumnos.size)
+    alumnos.forEach { sum += it.edad }
+    println("-Media de edad de los alumnos: " + sum / alumnos.size + "-")
 
     sum = 0
-    alumnos.forEach{sum += it.nombre.length}
-    println("Media de longitud de nombre de los alumnos: " + sum/alumnos.size)
+    alumnos.forEach { sum += it.nombre.length }
+    println("Media de longitud de nombre de los alumnos: " + sum / alumnos.size + "-")
 
-    println("Listado de alumnos agrupados por edad:")
-    println(alumnos.groupBy{it.edad})
+    println("-Listado de alumnos agrupados por edad: -")
+    println(alumnos.groupBy { it.edad })
 
-    println("Listado de alumnos agrupados por edad:")
+    println("-Alumnos agrupados por edad, contados: -")
+    println(alumnos.groupingBy { it.edad }.eachCount())
 
+    println("-Alumnos agrupados por edad, longitud del nombre: -")
+    println(alumnos.groupBy { it.edad }.mapValues{it.value.map{it.nombre.length}})
+
+    println("-Alumnos agrupados por edad, nombre mas largo: -")
+    println(alumnos.groupBy { it.edad }.mapValues{it.value.maxBy{it.nombre.length}})
 }
